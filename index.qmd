@@ -2,7 +2,7 @@
 
 ## Project Summary 
 
-Fill in the sections below to provide a brief summary of your project. Each section should have no more than 100 words. Do not edit any of the headings.
+Fill in the sections below to provide a brief summary of your project. Each section should have no more than 100 words. Do not edit any of the headings！
 
 ### Problem Statement 
 
