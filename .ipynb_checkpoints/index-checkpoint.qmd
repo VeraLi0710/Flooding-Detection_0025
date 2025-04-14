@@ -13,11 +13,11 @@ jupyter:
     name: base
 ---
 
+
 Project Github Link: https://github.com/alteregoyishan/groupwork_0025.git
 
 ### Project Summary 
-The project addresses the significant challenges posed by the July 2021 floods in Central Europe, which resulted in extensive damage to settlements, infrastructure and ecosystems. A comprehensive post-disaster analysis framework is critical to understanding the spatial, temporal, and environmental impacts of disaster events and supporting effective recovery and risk mitigation.
-
+The project addresses the significant challenges posed by the July 2021 floods in Central Europe, which resulted in extensive damage to settlements, infrastructure, and ecosystems. A comprehensive post-disaster analysis framework is critical to understanding the spatial, temporal, and environmental impacts of disaster events and supporting effective recovery and risk mitigation.
 ### Problem Statement 
 How did the July 2021 extreme flooding event in Central Europe impact different elements (settlements, vegetation, infrastructure), and what spatial patterns emerged during the recovery process as documented through multi-temporal satellite analysis?
 
@@ -41,10 +41,30 @@ Uniform parameters such as spatial resolution, temporal thresholds and threshold
 The interactive application offers tools like timeline sliders, heat maps, draw-a-region calculations, and vegetation/infrastructure recovery visualizations. These features prioritize usability, providing stakeholders with insights tailored to planning and recovery scenarios.
 
 ### The Application 
+
 Replace the link below with the link to your application.
 
 
 ### How it Works 
+
+Use this section to explain how your application works using code blocks and text explanations (no more than 500 words excluding code):
+
+```js
+Map.setCenter(35.51898, 33.90153, 15);
+
+Map.setOptions("satellite");
+
+var aoi = ee.Geometry.Point(35.51898, 33.90153).buffer(3000);
+```
+You can include images:
+![Pixelwise T-Test, 2018](images/beirut_change_2020.jpg)
+
+and math:
+$$ \Large t = {\frac{\overline{x_1}-\overline{x_2}} {\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}} $$
+
+
+
+
 The application integrates multilayered analyses into a Google Earth Engine (GEE)-based interface:
 
 #### Flood Mapping
@@ -60,6 +80,8 @@ var vvImage = s1Collection.first().select('VV');
 var waterMask = vvImage.lt(-16); // Flood detection threshold  
 Map.addLayer(waterMask, {palette: ['white', 'blue']}, 'Flood Extent');  
 ```
+
+
 
 #### Settlement Impact Assessment 
 VIIRS nightlight changes highlight economic recovery and rebuilding progress. Comparing pre-2021 floods, post-flood periods, and March 2022 data aids in identifying recovery lags.
@@ -109,4 +131,5 @@ var totalRisk = floodRisk.multiply(weights.flood)
   .add(infraRisk.multiply(weights.infra));  
 Map.addLayer(totalRisk, {min: 1, max: 5, palette: ['green', 'yellow', 'orange', 'red', 'darkred']}, 'Risk Levels');  
 ```
+
 
