@@ -47,18 +47,15 @@ Replace the link below with the link to your application.
 ### How it Works 
 The application integrates multilayered analyses into a Google Earth Engine (GEE)-based interface:
 
-#### Flood Mapping
-Using Sentinel-1 SAR data, flood extent is delineated for the July 12–18, 2021 disaster. The SAR backscatter threshold (-16 dB) distinguishes water bodies from land, accurately capturing flooded regions free from cloud interference. DEM analysis calculates water depth and flow dynamics.
-
+#### Flooding Detection
+Using official EMS data. 
 ```js
-var s1Collection = ee.ImageCollection('COPERNICUS/S1_GRD')  
-  .filterBounds(region)  
-  .filterDate('2021-07-12', '2021-07-18')  
-  .filter(ee.Filter.eq('instrumentMode', 'IW'))  
-  .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VV'));  
-var vvImage = s1Collection.first().select('VV');  
-var waterMask = vvImage.lt(-16); // Flood detection threshold  
-Map.addLayer(waterMask, {palette: ['white', 'blue']}, 'Flood Extent');  
+var floodExtent = moselleData.observedEvent.geometry();
+var riverGeometry = moselleData.hydrographyA.geometry();
+var floodExpansion = floodExtent.difference(riverGeometry, 1);
+Map.centerObject(floodExtent, 11);
+Map.addLayer(riverGeometry, {color: 'blue'}, 'Inherent River');
+Map.addLayer(floodExpansion, {color: 'cyan'}, 'Flood Expansion');
 ```
 
 #### Settlement Impact Assessment 
