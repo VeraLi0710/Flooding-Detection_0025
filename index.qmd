@@ -17,14 +17,14 @@ Project Github Link: https://github.com/alteregoyishan/groupwork_0025.git
 
 All these sections except 'how it work', the word limitation is 100 words. 'How it work' is 500 words limitaion.
 ### Project Summary 
-The project focused the significant flooding happened July 2021 in Central Europe based on the Google Earth Engine application. The approach quantifies landscape changes, identifies vulnerable areas and evaluates relations across human activities area, vegetation and risk index, aiming to inform better disaster response, risk reduction, and future planning for similar extreme events.
+The project focused on the significant flooding happened July 2021 in Central Europe based on the Google Earth Engine application. The approach quantifies landscape changes, identifies vulnerable areas and evaluates relations across human activities area, vegetation and risk index, aiming to inform better disaster response, risk reduction, and future planning for similar extreme events.
 
 ### Problem Statement 
-What were the spatial patterns and magnitude of flood impacts on human activities area, vegetation and infrastructure during and after the July 2021 floods in Germany? How did these elements recover over time according to satellite observations and spatial analysis in the months following the disaster?
+What were the spatial patterns and magnitude of flood impacts on human-activities area, vegetation and infrastructure during and after the July 2021 floods in Germany? How did these elements recover over time according to satellite observations and spatial analysis in the months following the disaster?
 
 ### End User 
 
-This application is designed for public, disaster management agencies, urban planners, and humanitarian organizations. It provides tools to monitor flood impacts on settlements, vegetation, and infrastructure, enabling informed recovery planning and mitigating risks for future extreme weather events.
+This application is designed for the public, disaster management agencies, urban planners, and humanitarian organisations. It provides tools to monitor flood impacts on settlements, vegetation, and infrastructure, enabling informed recovery planning and mitigating risks for future extreme weather events.
 
 ### Data
 The Data Standard:
@@ -65,7 +65,7 @@ Our workflow combines physical, ecological and social risk factors. Flood extent
 The interactive application offers multi-tools:
 (Add after all combined)
 timeline sliders, heat maps, draw-a-region calculations, and vegetation/infrastructure recovery visualisations. These features prioritise usability, providing stakeholders with insights tailored to planning and recovery scenarios.
-Split Panel in () and risk assessment to show the difference after compare.
+Split Panel in () and risk assessment to show the difference after comparison.
 
 ### The Application 
 link
