@@ -73,7 +73,7 @@ Split Panel in () and risk assessment to show the difference after comparison.
 ### The Application 
 :::{.column-page}
 
-<iframe src='https://code.earthengine.google.com/3b4aafce0660fd1430fb16b8f31c7aa3?accept_repo=users%2Fverali0710%2Fhello_world&hideCode=true' width='100%' height='700px'></iframe>
+<iframe src='https://peak-argon-449020-k0.projects.earthengine.app/view/flooding2021-0error-0warning-group' width='100%' height='700px'></iframe>
 
 :::
 
@@ -81,7 +81,8 @@ Split Panel in () and risk assessment to show the difference after comparison.
 The application integrates multilayered analyses into a Google Earth Engine (GEE)-based interface with four sections:
 
 #### Section 1： Starter Web and Flooding Basic Analysis
-Using official EMS data from (Resource). 
+Using official EMS data from (Resource), this component delineates precise flood boundaries by comparing observed flood extents with inherent river geometries, providing a foundation for impact and risk analysis. 
+
 ```js
 var floodExtent = moselleData.observedEvent.geometry();
 var riverGeometry = moselleData.hydrographyA.geometry();
@@ -101,15 +102,17 @@ Map.addLayer(recoveryNDVI, {min: 0, max: 100, palette: ['red', 'yellow', 'green'
 ```
 
 #### Section 3：Night Light Detection
-Areas with higher nightlight values typically contain critical infrastructure requiring prioritised protection.
+Nightlight data highlight critical infrastructure and potential disruption areas.
 ```js
+// Nightlight intensity as proxy for urban infrastructure and activity  
 var night = ee.ImageCollection('NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG')  
   .filterBounds(studyArea)  
-  .filterDate('2021-06-01', '2021-07-01')  
+  .filterDate('2021-06-01', '2021-06-30')  
   .select('avg_rad')  
-  .median()  
-  .rename('NIGHT')  
+  .mean()  
   .clip(studyArea);  
+
+var nightN = night.divide(10).clamp(0, 1);  
 ```
 
 #### Section 4：Risk Assessment
@@ -161,8 +164,16 @@ var nightN = night.divide(10).clamp(0, 1);
 ```
 
 ##### Risk Index
-Final with the system constructs composite indices for hazard and exposure, then combines them into a unified risk index
+Final with the system constructs composite indices for hazard and exposure, then combines them into a unified risk index. Weights applied reflect expert judgement and hydrological modelling studies (e.g. Triana et al., 2010), balancing the relative influence of terrain, precipitation, flooding extent, population exposure and infrastructure vulnerability.
+
 ```js
+var slopeFlat = ee.Image(1).subtract(slope.divide(30).clamp(0, 1));  
+var tpiDep = ee.Image(1).subtract(tpi.add(100).divide(200).clamp(0, 1));  
+var flowN = flow.divide(20000).clamp(0, 1);  
+var rainN = rain.divide(10).clamp(0, 1);  
+var popN = pop.divide(500).clamp(0, 1);  
+var floodCalc = moselleData.observedEvent.reduceToImage({properties:[], reducer:ee.Reducer.countEvery()}).gt(0).unmask(0);  
+
 var hazard = slopeFlat.multiply(0.25)  
   .add(tpiDep.multiply(0.15))  
   .add(flowN.multiply(0.20))  
