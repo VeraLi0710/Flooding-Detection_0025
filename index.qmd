@@ -16,6 +16,7 @@ jupyter:
 
 Project Github Link: [https://github.com/alteregoyishan/groupwork_0025.git](https://github.com/alteregoyishan/groupwork_0025.git)
 
+GEE Complete Code: [https://code.earthengine.google.com/?scriptPath=users%2Fverali0710%2Fhello_world%3A0025Final_V2](https://code.earthengine.google.com/?scriptPath=users%2Fverali0710%2Fhello_world%3A0025Final_V2)  
 
 ### Project Summary 
 
