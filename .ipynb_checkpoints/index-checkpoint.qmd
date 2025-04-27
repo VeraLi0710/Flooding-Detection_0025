@@ -70,14 +70,18 @@ Our workflow combines physical, ecological and social risk factors. Flood extent
 The interactive application provides user-friendly tools designed to support flood risk analysis and stakeholder engagement. We draw inspirations from [Earthengine.app (2025a)](#earthengine-modis-2025a) and [Earthengine.app (2025b)](#earthengine-tropomi-2025b): 
 
 - **Recovery Monitoring:** Multi-temporal analysis of nightlight and vegetation data tracks impacts and recovery of infrastructure and ecosystems.
- ![](images/home.png){ width=300px fig-align="center" }  
+
+
+![](images/home.png){ width=500px fig-align="center" }  
 
 - **Dynamic Visualisations:** Timeline sliders, heat maps, and split-panel views enable side-by-side comparison of flood risk factors and changes over time. 
- ![](images/comparasion.png){ width=300px fig-align="center" }  
+
+ ![](images/comparasion.png){ width=500px fig-align="center" }  
 
   
 - **Interactive Drawing & Analysis:** Drawing tools facilitate local-scale calculations and enhance communication with stakeholders.
- ![](images/Drawing-function.png){ width=300px fig-align="center" }
+
+ ![](images/Drawing-function.png){ width=500px fig-align="center" }
 
 
 - **Risk Assessment Tools:** Integrated hazard and exposure indices support targeted and spatially explicit flood management decisions.

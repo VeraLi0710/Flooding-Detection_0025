@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Analysis of Significant Flooding Disaster in Europe</title>
+<title>Central European Flood 2021: Interactive Analysis of Moselle River Basin Impacts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -80,11 +114,11 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Analysis of Significant Flooding Disaster in Europe</h1>
+<h1 class="title"><p>Central European Flood 2021: Interactive Analysis of Moselle River Basin Impacts</p></h1>
 </div>
 
 
@@ -101,8 +135,196 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Project Github Link: <a href="https://github.com/alteregoyishan/groupwork_0025.git">https://github.com/alteregoyishan/groupwork_0025.git</a></p>
+<p>All these sections except ‘how it work’, the word limitation is 100 words. ‘How it work’ is 500 words limitaion.</p>
+<section id="project-summary" class="level3">
+<h3 class="anchored" data-anchor-id="project-summary">Project Summary</h3>
+<p>The project focused on the significant flooding happened July 2021 in Central Europe based on the Google Earth Engine application. The approach quantifies landscape changes, identifies vulnerable areas and evaluates relations across human activities area, vegetation and risk index, aiming to inform better disaster response, risk reduction, and future planning for similar extreme events.</p>
+</section>
+<section id="problem-statement" class="level3">
+<h3 class="anchored" data-anchor-id="problem-statement">Problem Statement</h3>
+<p>What were the spatial patterns and magnitude of flood impacts on human-activities area, vegetation and infrastructure during and after the July 2021 floods in Germany? How did these elements recover over time according to satellite observations and spatial analysis in the months following the disaster?</p>
+</section>
+<section id="end-user" class="level3">
+<h3 class="anchored" data-anchor-id="end-user">End User</h3>
+<p>This application is designed for the public, disaster management agencies, urban planners, and humanitarian organisations. It provides tools to monitor flood impacts on settlements, vegetation, and infrastructure, enabling informed recovery planning and mitigating risks for future extreme weather events.</p>
+</section>
+<section id="data" class="level3">
+<h3 class="anchored" data-anchor-id="data">Data</h3>
+<p>The Data Standard:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> spatialParameters <span class="op">=</span> {  </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">resolution</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="co">// meters - selected for compatibility with Sentinel data  </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">coordinateSystem</span><span class="op">:</span> <span class="st">'EPSG:4326'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The analysis leverages Google Earth Engine to access key global datasets: DEM from SRTM:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ee<span class="op">.</span><span class="fu">Image</span>(<span class="st">'NASA/NASADEM_HGT/001'</span>)<span class="op">.</span><span class="fu">select</span>(<span class="st">'elevation'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Daily Precipitation:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'NASA/GPM_L3/IMERG_V07'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Flooding:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'COPERNICUS/S1_GRD'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>VIIRS nightlight data:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>WorldPop population distribution:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'WorldPop/GP/100m/pop_age_sex_cons_unadj'</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Additional data sources:<br>
+- German official hydrological station data for flood extent mapping (<a href="https://www.pegelonline.wsv.de/gast/karte/standard">pegelonline.wsv.de</a>)<br>
+- Detailed precipitation dataset used for rainfall analysis (<a href="https://developers.google.com/earth-engine/datasets/catalog/NASA_GPM_L3_IMERG_V07?hl=zh-cn">NASA GPM IMERG</a>)</p>
+</section>
+<section id="methodology" class="level3">
+<h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
+<p>Our workflow combines physical, ecological and social risk factors. Flood extent mapping utilises data provided by German hydrological monitoring stations. Vegetation change detection uses NDVI before and after flooding. Nightlight data indicates infrastructure disruptions. Population and rainfall data measure exposure and hazard levels. All indices are normalised and combined for final weighted risk analysis and mapping.</p>
+</section>
+<section id="interface" class="level3">
+<h3 class="anchored" data-anchor-id="interface">Interface</h3>
+<p>The interactive application provides user-friendly tools designed to support flood risk analysis and stakeholder engagement. We draw inspirations from <a href="#earthengine-modis-2025a">Earthengine.app (2025a)</a> and <a href="#earthengine-tropomi-2025b">Earthengine.app (2025b)</a>:</p>
+<ul>
+<li><strong>Recovery Monitoring:</strong> Multi-temporal analysis of nightlight and vegetation data tracks impacts and recovery of infrastructure and ecosystems.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/home.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="500"></p>
+</figure>
+</div>
+<ul>
+<li><strong>Dynamic Visualisations:</strong> Timeline sliders, heat maps, and split-panel views enable side-by-side comparison of flood risk factors and changes over time.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/comparasion.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="500"></p>
+</figure>
+</div>
+<ul>
+<li><strong>Interactive Drawing &amp; Analysis:</strong> Drawing tools facilitate local-scale calculations and enhance communication with stakeholders.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/Drawing-function.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="500"></p>
+</figure>
+</div>
+<ul>
+<li><strong>Risk Assessment Tools:</strong> Integrated hazard and exposure indices support targeted and spatially explicit flood management decisions.</li>
+</ul>
+</section>
+<section id="the-application" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="the-application">The Application</h3>
+<div class="column-page">
+<iframe src="https://peak-argon-449020-k0.projects.earthengine.app/view/flooding2021-0error-0warning-group" width="100%" height="700px">
+</iframe>
+</div>
+</section>
+<section id="how-it-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-works">How it Works</h3>
+<p>The application integrates multilayered analyses in a Google Earth Engine (GEE) interface across four key sections:</p>
+<section id="section-1starter-web-and-flooding-basic-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="section-1starter-web-and-flooding-basic-analysis">Section 1：Starter Web and Flooding Basic Analysis</h4>
+<p>Using official EMS data, this section delineates precise flood boundaries by subtracting river channel geometries from observed flood extents, establishing a baseline for impact and risk analysis.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> floodExtent <span class="op">=</span> moselleData<span class="op">.</span><span class="at">observedEvent</span><span class="op">.</span><span class="fu">geometry</span>()<span class="op">;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> riverGeometry <span class="op">=</span> moselleData<span class="op">.</span><span class="at">hydrographyA</span><span class="op">.</span><span class="fu">geometry</span>()<span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> floodExpansion <span class="op">=</span> floodExtent<span class="op">.</span><span class="fu">difference</span>(riverGeometry<span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(floodExtent<span class="op">,</span> <span class="dv">11</span>)<span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(riverGeometry<span class="op">,</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'blue'</span>}<span class="op">,</span> <span class="st">'Inherent River'</span>)<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(floodExpansion<span class="op">,</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'cyan'</span>}<span class="op">,</span> <span class="st">'Flood Expansion'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/homepage.png" class="img-fluid"></p>
+</section>
+<section id="section-2vegetation-impact-recovery" class="level4">
+<h4 class="anchored" data-anchor-id="section-2vegetation-impact-recovery">Section 2：Vegetation Impact &amp; Recovery</h4>
+<p>Using MODIS NDVI data, comparing pre-flood and recovery periods. The difference map highlights damaged areas (red) and recovery (green), providing crucial insights into landscape resilience.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> ndviLoss <span class="op">=</span> preFloodNDVI<span class="op">.</span><span class="fu">subtract</span>(postFloodNDVI)<span class="op">;</span>  </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> recoveryNDVI <span class="op">=</span> recoveryNDVI<span class="op">.</span><span class="fu">divide</span>(preFloodNDVI)<span class="op">.</span><span class="fu">multiply</span>(<span class="dv">100</span>)<span class="op">;</span>  </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(recoveryNDVI<span class="op">,</span> {<span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="dv">100</span><span class="op">,</span> <span class="dt">palette</span><span class="op">:</span> [<span class="st">'red'</span><span class="op">,</span> <span class="st">'yellow'</span><span class="op">,</span> <span class="st">'green'</span>]}<span class="op">,</span> <span class="st">'Recovery Percentage'</span>)<span class="op">;</span>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/ndvi.png" class="img-fluid"></p>
+</section>
+<section id="section-3night-light-detection" class="level4">
+<h4 class="anchored" data-anchor-id="section-3night-light-detection">Section 3：Night Light Detection</h4>
+<p>Nightlight data highlight critical infrastructure and potential disruption areas.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> night <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG'</span>)  </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filterBounds</span>(studyArea)  </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filterDate</span>(<span class="st">'2021-06-01'</span><span class="op">,</span> <span class="st">'2021-06-30'</span>)  </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">select</span>(<span class="st">'avg_rad'</span>)  </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">mean</span>()  </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">clip</span>(studyArea)<span class="op">;</span>  </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> nightN <span class="op">=</span> night<span class="op">.</span><span class="fu">divide</span>(<span class="dv">10</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/Nightlight-recovery.png" class="img-fluid"></p>
+</section>
+<section id="section-4risk-assessment" class="level4">
+<h4 class="anchored" data-anchor-id="section-4risk-assessment">Section 4：Risk Assessment</h4>
+<p>This section integrates environmental and socioeconomic factors into a comprehensive flood vulnerability index, combining hazard likelihood with exposure metrics to produce spatial risk classifications.</p>
+<p><strong>DEM and Terrain</strong> analysis uses NASADEM elevation data to calculate slope and Topographic Position Index (TPI), where flat areas and depressions are assigned higher risk due to water accumulation.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> dem <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(<span class="st">'NASA/NASADEM_HGT/001'</span>)<span class="op">.</span><span class="fu">select</span>(<span class="st">'elevation'</span>)<span class="op">.</span><span class="fu">clip</span>(studyArea)<span class="op">;</span>  </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> slope <span class="op">=</span> ee<span class="op">.</span><span class="at">Terrain</span><span class="op">.</span><span class="fu">slope</span>(dem)<span class="op">.</span><span class="fu">unmask</span>(<span class="dv">0</span>)<span class="op">;</span>  </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> tpi <span class="op">=</span> dem<span class="op">.</span><span class="fu">subtract</span>(dem<span class="op">.</span><span class="fu">focal_mean</span>({<span class="dt">radius</span><span class="op">:</span><span class="dv">500</span><span class="op">,</span><span class="dt">units</span><span class="op">:</span><span class="st">'meters'</span>}))<span class="op">.</span><span class="fu">unmask</span>(<span class="dv">0</span>)<span class="op">;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Population</strong> exposure leverages WorldPop’s detailed demographic data, summing across all age and gender bands to identify vulnerable communities：</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> popAllBands <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'WorldPop/GP/100m/pop_age_sex_cons_unadj'</span>)  </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span>(<span class="kw">function</span>(image) {  </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> image<span class="op">.</span><span class="fu">clip</span>(studyArea)<span class="op">;</span>  </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  })  </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">reduce</span>(ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">sum</span>())<span class="op">;</span>  </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> pop <span class="op">=</span> popAllBands<span class="op">.</span><span class="fu">select</span>([<span class="dv">0</span>])<span class="op">.</span><span class="fu">unmask</span>(<span class="dv">0</span>)<span class="op">;</span>   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Precipitation</strong> intensity from NASA’s GPM IMERG quantifies rainfall during the flood period：</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> rain <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'NASA/GPM_L3/IMERG_V07'</span>)  </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filterBounds</span>(studyArea)  </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">filterDate</span>(win<span class="op">.</span><span class="at">preStart</span><span class="op">,</span> win<span class="op">.</span><span class="at">preEnd</span>)  </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">select</span>(<span class="st">'precipitation'</span>)  </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">sum</span>()  </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">rename</span>(<span class="st">'RAIN'</span>)  </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">clip</span>(studyArea)<span class="op">;</span>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Parameter Normalisation:</strong> All variables are normalised to a 0-1 scale to enable integration and weighted combination:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> tpiDep <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(<span class="dv">1</span>)<span class="op">.</span><span class="fu">subtract</span>(tpi<span class="op">.</span><span class="fu">add</span>(<span class="dv">100</span>)<span class="op">.</span><span class="fu">divide</span>(<span class="dv">200</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>))<span class="op">;</span>  </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> flowN <span class="op">=</span> flow<span class="op">.</span><span class="fu">divide</span>(<span class="dv">20000</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span>  </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> rainN <span class="op">=</span> rain<span class="op">.</span><span class="fu">divide</span>(<span class="dv">10</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span>  </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> ndviN <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(<span class="dv">1</span>)<span class="op">.</span><span class="fu">subtract</span>(ndvi<span class="op">.</span><span class="fu">add</span>(<span class="dv">1</span>)<span class="op">.</span><span class="fu">divide</span>(<span class="dv">2</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>))<span class="op">;</span>  </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> popN <span class="op">=</span> pop<span class="op">.</span><span class="fu">divide</span>(<span class="dv">34</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span>  </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> nightN <span class="op">=</span> night<span class="op">.</span><span class="fu">divide</span>(<span class="dv">10</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Risk Index:</strong><br>
+Finally, composite indices for hazard and exposure are computed and combined into a unified risk index. Weightings reflect expert judgement and hydrological modelling (e.g., <a href="#triana-2010">Triana et al., 2010</a>), balancing influences of terrain, rainfall, flooding extent, population, and infrastructure vulnerability.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> slopeFlat <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(<span class="dv">1</span>)<span class="op">.</span><span class="fu">subtract</span>(slope<span class="op">.</span><span class="fu">divide</span>(<span class="dv">30</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>))<span class="op">;</span>  </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> tpiDep <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(<span class="dv">1</span>)<span class="op">.</span><span class="fu">subtract</span>(tpi<span class="op">.</span><span class="fu">add</span>(<span class="dv">100</span>)<span class="op">.</span><span class="fu">divide</span>(<span class="dv">200</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>))<span class="op">;</span>  </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> flowN <span class="op">=</span> flow<span class="op">.</span><span class="fu">divide</span>(<span class="dv">20000</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span>  </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> rainN <span class="op">=</span> rain<span class="op">.</span><span class="fu">divide</span>(<span class="dv">10</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span>  </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> popN <span class="op">=</span> pop<span class="op">.</span><span class="fu">divide</span>(<span class="dv">500</span>)<span class="op">.</span><span class="fu">clamp</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span>  </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> floodCalc <span class="op">=</span> moselleData<span class="op">.</span><span class="at">observedEvent</span><span class="op">.</span><span class="fu">reduceToImage</span>({<span class="dt">properties</span><span class="op">:</span>[]<span class="op">,</span> <span class="dt">reducer</span><span class="op">:</span>ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">countEvery</span>()})<span class="op">.</span><span class="fu">gt</span>(<span class="dv">0</span>)<span class="op">.</span><span class="fu">unmask</span>(<span class="dv">0</span>)<span class="op">;</span>  </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> hazard <span class="op">=</span> slopeFlat<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.25</span>)  </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">add</span>(tpiDep<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.15</span>))  </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">add</span>(flowN<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.20</span>))  </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">add</span>(rainN<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.20</span>))  </span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">add</span>(floodCalc<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.20</span>))<span class="op">;</span>  </span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> exposure <span class="op">=</span> popN<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.4</span>)  </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">add</span>(nightN<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.6</span>))<span class="op">;</span>  </span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> risk <span class="op">=</span> hazard<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.5</span>)  </span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">add</span>(exposure<span class="op">.</span><span class="fu">multiply</span>(<span class="fl">0.5</span>))<span class="op">;</span>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/risk.png" class="img-fluid"></p>
+</section>
+<section id="limitations" class="level4">
+<h4 class="anchored" data-anchor-id="limitations">Limitations:</h4>
+<p>During the processing, we found the following limitations:</p>
+<ul>
+<li><p>The Google Earth Engine is not suitable for complex analysis so we had to simplify our analytical procedures to improve visualisation performance.</p></li>
+<li><p>Daily flood extent visualisation showed minimal significant changes, likely due to the canyon terrain of the Moselle River which constrains lateral flood expansion. As noted by <a href="#giustarini-2013">Giustarini et al., 2013</a>, SAR systems are side-looking and terrain features can produce radar shadow in steep areas.</p></li>
+<li><p>Precipitation data could not be obtained at a finer spatial resolution, limiting analysis of localised rainfall patterns. Population data resolution also constrained our ability to conduct detailed vulnerability assessments.</p></li>
+<li><p>Time range and threshold settings presented challenges. Setting appropriate NDVI and nightlight recovery thresholds required subjective decisions, and our analysis timeframe (July 2021–March 2022) may not capture complete recovery trajectories.</p></li>
+<li><p>Multiple factors beyond flooding might influence the recovery processes observed in nightlight and vegetation data. Natural seasonal changes, human interventions, and economic factors affect these indicators, potentially introducing confounding variables into our risk assessment.</p></li>
+</ul>
+</section>
+</section>
+<section id="reference" class="level3">
+<h3 class="anchored" data-anchor-id="reference">Reference:</h3>
+<ul>
+<li><p>Amatebelle, C.E., Owolabi, S.T., Abiodun, O. and Okolie, C.C. (2025). A systematic analysis of remote sensing and geographic information system applications for flood disaster risk management. <em>Journal of Spatial Science</em>, pp.1–27. doi: <a href="https://doi.org/10.1080/14498596.2025.2476973">https://doi.org/10.1080/14498596.2025.2476973</a> [Accessed 18 Apr.&nbsp;2025].</p></li>
+<li><p>Bi, H., Ni, Z., Tian, J., Jiang, C., Sun, H. and Lin, Q. (2022). Influence of lignin on coal gangue pyrolysis and gas emission based on multi-lump parallel reaction model and principal component analysis. <em>The Science of The Total Environment</em>, 820, pp.153083–153083. doi: <a href="https://doi.org/10.1016/j.scitotenv.2022.153083">https://doi.org/10.1016/j.scitotenv.2022.153083</a> [Accessed 19 Apr.&nbsp;2025].</p></li>
+<li><p><a id="earthengine-modis-2025a"></a>Earthengine.app. (2025a). MODIS NDVI Slider. [online] Available at: <a href="https://khaledalshamaa.users.earthengine.app/view/modis-ndvi-slider">https://khaledalshamaa.users.earthengine.app/view/modis-ndvi-slider</a> [Accessed 19 Apr.&nbsp;2025].</p></li>
+<li><p><a id="earthengine-tropomi-2025b"></a>Earthengine.app. (2025b). tropomi-explorer. [online] Available at: <a href="https://jstnbraaten.users.earthengine.app/view/tropomi-explorer#dataset=Nitrogen%20dioxide">https://jstnbraaten.users.earthengine.app/view/tropomi-explorer#dataset=Nitrogen%20dioxide</a> [Accessed 20 Apr.&nbsp;2025].</p></li>
+<li><p>Eddy, M., Ewing, J., Specia, M. and Erlanger, S. (2021). European Floods Are Latest Sign of a Global Warming Crisis. <em>The New York Times</em>. [online] 16 Jul.&nbsp;Available at: <a href="https://www.nytimes.com/2021/07/16/world/europe/germany-floods-climate-change.html">https://www.nytimes.com/2021/07/16/world/europe/germany-floods-climate-change.html</a> [Accessed 20 Apr.&nbsp;2025].</p></li>
+<li><p><a id="giustarini-2013"></a>Giustarini, L., Hostache, R., Matgen, P., Schumann, G.J.-P., Bates, P.D. and Mason, D.C. (2013). A Change Detection Approach to Flood Mapping in Urban Areas Using TerraSAR-X. <em>IEEE Transactions on Geoscience and Remote Sensing</em>, 51(4), pp.2417–2430. doi: <a href="https://doi.org/10.1109/TGRS.2012.2210901">https://doi.org/10.1109/TGRS.2012.2210901</a> [Accessed 20 Apr.&nbsp;2025].</p></li>
+<li><p>Google for Developers. (2025). GPM: Global Precipitation Measurement (GPM) Release 07 | Earth Engine Data Catalog | Google for Developers. [online] Available at: <a href="https://developers.google.com/earth-engine/datasets/catalog/NASA_GPM_L3_IMERG_V07?hl=zh-cn">https://developers.google.com/earth-engine/datasets/catalog/NASA_GPM_L3_IMERG_V07?hl=zh-cn</a> [Accessed 21 Apr.&nbsp;2025].</p></li>
+<li><p>Manandhar, B., Cui, S., Wang, L. and Shrestha, S. (2023). Post-Flood Resilience Assessment of July 2021 Flood in Western Germany.</p></li>
+<li><p><a id="triana-2010"></a>Triana, M.A., Labadie, J.W., Kumar, S. and Nieto, J. (2010) ‘Artificial neural networks applied to efficient modeling of stream-aquifer responses in an intensively irrigated river basin under a variety of water management alternatives’, <em>Journal of Hydrology</em>, 391(3–4), pp.&nbsp;366–378. Available at: <a href="https://www.sciencedirect.com/science/article/pii/S002216941000449X">https://www.sciencedirect.com/science/article/pii/S002216941000449X</a> [Accessed: 27 April 2025].</p></li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
