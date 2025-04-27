@@ -1,6 +1,6 @@
 ---
 title: |
-  Central European Flood 2021: Interactive Analysis of Moselle River Basin Impacts
+  Central European Flood 2021: Interactive Analysis of the Moselle River Region Impact
 jupyter:
   jupytext:
     text_representation:
@@ -16,7 +16,6 @@ jupyter:
 
 Project Github Link: [https://github.com/alteregoyishan/groupwork_0025.git](https://github.com/alteregoyishan/groupwork_0025.git)
 
-All these sections except 'how it work', the word limitation is 100 words. 'How it work' is 500 words limitaion.
 
 ### Project Summary 
 
@@ -24,13 +23,16 @@ The project focused on the significant flooding happened July 2021 in Central Eu
 
 ### Problem Statement 
 
-What were the spatial patterns and magnitude of flood impacts on human-activities area, vegetation and infrastructure during and after the July 2021 floods in Germany? How did these elements recover over time according to satellite observations and spatial analysis in the months following the disaster?
+What were the spatial patterns and magnitude of flood impacts on human-activities area, vegetation and infrastructure during and after the July 2021 floods in Central Europe? How did these elements recover over time according to satellite observations and spatial analysis in the months following the disaster?
 
 ### End User 
 
 This application is designed for the public, disaster management agencies, urban planners, and humanitarian organisations. It provides tools to monitor flood impacts on settlements, vegetation, and infrastructure, enabling informed recovery planning and mitigating risks for future extreme weather events.
 
 ### Data
+
+Our base data for the Moselle River range, available on the [EMS Activation Page](https://mapping.emergency.copernicus.eu/activations/EMSR517/), includes boundaries, rivers, buildings, and various other datasets.  
+
 The Data Standard:
 ```js
 var spatialParameters = {  
@@ -49,6 +51,10 @@ ee.ImageCollection('NASA/GPM_L3/IMERG_V07')
 Flooding:
 ```js
 ee.ImageCollection('COPERNICUS/S1_GRD')  
+```
+NDVI:
+```js
+ee.ImageCollection("MODIS/006/MOD13Q1")
 ```
 VIIRS nightlight data:
 ```js
@@ -140,7 +146,7 @@ var nightN = night.divide(10).clamp(0, 1);
 #### Section 4：Risk Assessment
 This section integrates environmental and socioeconomic factors into a comprehensive flood vulnerability index, combining hazard likelihood with exposure metrics to produce spatial risk classifications.
 
-**DEM and Terrain**
+**DEM and Terrain:**
 analysis uses NASADEM elevation data to calculate slope and Topographic Position Index (TPI), where flat areas and depressions are assigned higher risk due to water accumulation.
 ```js
 var dem = ee.Image('NASA/NASADEM_HGT/001').select('elevation').clip(studyArea);  
@@ -149,7 +155,7 @@ var tpi = dem.subtract(dem.focal_mean({radius:500,units:'meters'})).unmask(0);
 ```
 
 
-**Population** 
+**Population:** 
 exposure leverages WorldPop’s detailed demographic data, summing across all age and gender bands to identify vulnerable communities：
 ```js
 var popAllBands = ee.ImageCollection('WorldPop/GP/100m/pop_age_sex_cons_unadj')  
@@ -161,7 +167,7 @@ var pop = popAllBands.select([0]).unmask(0);
 ```
 
 
-**Precipitation**
+**Precipitation:**
 intensity from NASA’s GPM IMERG quantifies rainfall during the flood period：
 ```js
 var rain = ee.ImageCollection('NASA/GPM_L3/IMERG_V07')  
