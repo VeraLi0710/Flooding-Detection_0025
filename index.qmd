@@ -190,6 +190,11 @@ var risk = hazard.multiply(0.5)
 ##### Limitation:
 During the processing, we find the following limitations:
 a) The Google Earth Engine is not suitable for a complex analysis so we short our analysis to improve the visualisation 
+b) Daily flood extent visualisation showed minimal significant changes, likely due to the canyon terrain of the Moselle River which constrains lateral flood expansion. As noted by Giustarini et al. (2013), SAR systems are side-looking and terrain features can produce radar shadow in steep areas.
+c) Precipitation data could not be obtained at a finer spatial resolution, limiting analysis of localised rainfall patterns. Population data resolution also constrained our ability to conduct detailed vulnerability assessments.
+d) Time range and threshold settings presented challenges. Setting appropriate NDVI and nightlight recovery thresholds required subjective decisions, and our analysis timeframe (July 2021-March 2022) may not capture complete recovery trajectories.
+e) Multiple factors beyond flooding might influence the recovery processes observed in nightlight and vegetation data. Natural seasonal changes, human interventions, and economic factors affect these indicators, potentially introducing confounding variables into our risk assessment.
+
 
 
 - <a id="wyszynska-2020"></a>Wyszyńska, J., et al., 2020. Physical Activity in the Prevention of Childhood Obesity. *Frontiers in Pediatrics*. Available at: https://www.frontiersin.org/articles/10.3389/fped.2020.535705/full [Accessed 20 Apr 2025].  
