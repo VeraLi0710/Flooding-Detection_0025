@@ -12,3 +12,174 @@ jupyter:
     language: python
     name: base
 ---
+
+([Wyszyńska et al., 2020](#wyszynska-2020)
+
+
+Project Github Link: https://github.com/alteregoyishan/groupwork_0025.git
+
+All these sections except 'how it work', the word limitation is 100 words. 'How it work' is 500 words limitaion.
+### Project Summary 
+The project focused on the significant flooding happened July 2021 in Central Europe based on the Google Earth Engine application. The approach quantifies landscape changes, identifies vulnerable areas and evaluates relations across human activities area, vegetation and risk index, aiming to inform better disaster response, risk reduction, and future planning for similar extreme events.
+
+### Problem Statement 
+What were the spatial patterns and magnitude of flood impacts on human-activities area, vegetation and infrastructure during and after the July 2021 floods in Germany? How did these elements recover over time according to satellite observations and spatial analysis in the months following the disaster?
+
+### End User 
+
+This application is designed for the public, disaster management agencies, urban planners, and humanitarian organisations. It provides tools to monitor flood impacts on settlements, vegetation, and infrastructure, enabling informed recovery planning and mitigating risks for future extreme weather events.
+
+### Data
+The Data Standard:
+```js
+var spatialParameters = {  
+  resolution: 10, // meters - selected for compatibility with Sentinel data  
+  coordinateSystem: 'EPSG:4326')  
+```
+The analysis leverages Google Earth Engine to access key global datasets:
+DEM from SRTM
+```js
+ee.Image('NASA/NASADEM_HGT/001').select('elevation')  
+```
+Daily Precipitation
+```js
+ee.ImageCollection('NASA/GPM_L3/IMERG_V07')  
+```
+Flooding
+```js
+ee.ImageCollection('COPERNICUS/S1_GRD')  
+```
+VIIRS nightlight data
+```js
+ee.ImageCollection('NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG')  
+```
+WorldPop population distribution.
+```js
+ee.ImageCollection('WorldPop/GP/100m/pop_age_sex_cons_unadj')  
+```
+Besides, also used data from:
+
+
+### Methodology
+Our workflow combines physical, ecological and social risk factors. Flood extent is mapped via ( ). Vegetation change detection uses NDVI before and after flooding. Nightlight data indicates infrastructure disruptions. Population and rainfall data measure exposure and hazard levels. All indices are normalised and combined for final weighted risk analysis and mapping.
+
+
+### Interface
+The interactive application offers multi-tools:
+(Add after all combined)
+timeline sliders, heat maps, draw-a-region calculations, and vegetation/infrastructure recovery visualisations. These features prioritise usability, providing stakeholders with insights tailored to planning and recovery scenarios.
+Split Panel in () and risk assessment to show the difference after comparison.
+
+### The Application 
+:::{.column-page}
+
+<iframe src='https://code.earthengine.google.com/3b4aafce0660fd1430fb16b8f31c7aa3?accept_repo=users%2Fverali0710%2Fhello_world&hideCode=true' width='100%' height='700px'></iframe>
+
+:::
+
+### How it Works （500 words)
+The application integrates multilayered analyses into a Google Earth Engine (GEE)-based interface with four sections:
+
+#### Section 1： Starter Web and Flooding Basic Analysis
+Using official EMS data from (Resource). 
+```js
+var floodExtent = moselleData.observedEvent.geometry();
+var riverGeometry = moselleData.hydrographyA.geometry();
+var floodExpansion = floodExtent.difference(riverGeometry, 1);
+Map.centerObject(floodExtent, 11);
+Map.addLayer(riverGeometry, {color: 'blue'}, 'Inherent River');
+Map.addLayer(floodExpansion, {color: 'cyan'}, 'Flood Expansion');
+```
+
+#### Section 2：Vegetation Impact & Recovery (Edit this plzzz)
+NDVI indices derived from pre- and post-event Sentinel-2 data capture vegetation loss and recovery. Damaged areas are defined as NDVI < 0.3, while recovery assessments track vegetation returning to pre-flood levels (NDVI > 80%).
+
+```js
+var ndviLoss = preFloodNDVI.subtract(postFloodNDVI);  
+var recoveryNDVI = recoveryNDVI.divide(preFloodNDVI).multiply(100);  
+Map.addLayer(recoveryNDVI, {min: 0, max: 100, palette: ['red', 'yellow', 'green']}, 'Recovery Percentage');  
+```
+
+#### Section 3：Night Light Detection
+Areas with higher nightlight values typically contain critical infrastructure requiring prioritised protection.
+```js
+var night = ee.ImageCollection('NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG')  
+  .filterBounds(studyArea)  
+  .filterDate('2021-06-01', '2021-07-01')  
+  .select('avg_rad')  
+  .median()  
+  .rename('NIGHT')  
+  .clip(studyArea);  
+```
+
+#### Section 4：Risk Assessment
+This section analysis integrates multiple environmental and socioeconomic factors to create a comprehensive flood vulnerability index.This analytical approach combines hazard likelihood with exposure metrics, producing spatially explicit risk classifications.
+
+##### DEM and Terrain
+Terrain analysis using NASADEM elevation data generates slope and topographic position index (TPI). Flat areas and depressions (negative TPI values) receive higher risk scores as they naturally accumulate water. 
+
+```js
+var dem = ee.Image('NASA/NASADEM_HGT/001').select('elevation').clip(studyArea);  
+var slope = ee.Terrain.slope(dem).unmask(0);  
+var tpi = dem.subtract(dem.focal_mean({radius:500,units:'meters'})).unmask(0); 
+```
+
+##### Affected Population  
+Population exposure is calculated using WorldPop's high-resolution demographic data. The analysis aggregates population counts across all age and gender bands to identify vulnerable communities:
+
+```js
+var popAllBands = ee.ImageCollection('WorldPop/GP/100m/pop_age_sex_cons_unadj')  
+  .map(function(image) {  
+    return image.clip(studyArea);  
+  })  
+  .reduce(ee.Reducer.sum());  
+var pop = popAllBands.select([0]).unmask(0);   
+```
+
+##### Precipitation
+Precipitation data from NASA's GPM IMERG captures rainfall intensity during the critical flood period (July 14, 2021), identifying areas that received extreme precipitation:
+```js
+var rain = ee.ImageCollection('NASA/GPM_L3/IMERG_V07')  
+  .filterBounds(studyArea)  
+  .filterDate(win.preStart, win.preEnd)  
+  .select('precipitation')  
+  .sum()  
+  .rename('RAIN')  
+  .clip(studyArea);  
+```
+
+##### Parameter Normalisation
+The methodology then normalizes all variables to a common 0-1 scale, enabling their mathematical integration, so they can be weighted or combined together in further analysis.
+
+```js
+var tpiDep = ee.Image(1).subtract(tpi.add(100).divide(200).clamp(0, 1));  
+var flowN = flow.divide(20000).clamp(0, 1);  
+var rainN = rain.divide(10).clamp(0, 1);  
+var ndviN = ee.Image(1).subtract(ndvi.add(1).divide(2).clamp(0, 1));  
+var popN = pop.divide(34).clamp(0, 1);  
+var nightN = night.divide(10).clamp(0, 1);  
+```
+
+##### Risk Index
+Final with the system constructs composite indices for hazard and exposure, then combines them into a unified risk index
+```js
+var hazard = slopeFlat.multiply(0.25)  
+  .add(tpiDep.multiply(0.15))  
+  .add(flowN.multiply(0.20))  
+  .add(rainN.multiply(0.20))  
+  .add(floodCalc.multiply(0.20));  
+
+var exposure = popN.multiply(0.4)  
+  .add(nightN.multiply(0.6));  
+
+var risk = hazard.multiply(0.5)  
+  .add(exposure.multiply(0.5));  
+```
+
+##### Limitation:
+During the processing, we find the following limitations:
+a) The Google Earth Engine is not suitable for a complex analysis so we short our analysis to improve the visualisation 
+
+
+- <a id="wyszynska-2020"></a>Wyszyńska, J., et al., 2020. Physical Activity in the Prevention of Childhood Obesity. *Frontiers in Pediatrics*. Available at: https://www.frontiersin.org/articles/10.3389/fped.2020.535705/full [Accessed 20 Apr 2025].  
+

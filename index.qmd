@@ -13,6 +13,9 @@ jupyter:
     name: base
 ---
 
+([Wyszyńska et al., 2020](#wyszynska-2020)
+
+
 Project Github Link: https://github.com/alteregoyishan/groupwork_0025.git
 
 All these sections except 'how it work', the word limitation is 100 words. 'How it work' is 500 words limitaion.
@@ -68,8 +71,11 @@ timeline sliders, heat maps, draw-a-region calculations, and vegetation/infrastr
 Split Panel in () and risk assessment to show the difference after comparison.
 
 ### The Application 
-link
+:::{.column-page}
 
+<iframe src='https://peak-argon-449020-k0.projects.earthengine.app/view/flooding2021-0error-0warning-group' width='100%' height='700px'></iframe>
+
+:::
 
 ### How it Works （500 words)
 The application integrates multilayered analyses into a Google Earth Engine (GEE)-based interface with four sections:
@@ -173,3 +179,7 @@ var risk = hazard.multiply(0.5)
 ##### Limitation:
 During the processing, we find the following limitations:
 a) The Google Earth Engine is not suitable for a complex analysis so we short our analysis to improve the visualisation 
+
+
+- <a id="wyszynska-2020"></a>Wyszyńska, J., et al., 2020. Physical Activity in the Prevention of Childhood Obesity. *Frontiers in Pediatrics*. Available at: https://www.frontiersin.org/articles/10.3389/fped.2020.535705/full [Accessed 20 Apr 2025].  
+
