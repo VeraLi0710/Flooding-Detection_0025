@@ -13,13 +13,16 @@ jupyter:
     name: base
 ---
 
-Project Github Link: https://github.com/alteregoyishan/groupwork_0025.git
+Project Github Link: [https://github.com/alteregoyishan/groupwork_0025.git](https://github.com/alteregoyishan/groupwork_0025.git)
 
 All these sections except 'how it work', the word limitation is 100 words. 'How it work' is 500 words limitaion.
+
 ### Project Summary 
+
 The project focused on the significant flooding happened July 2021 in Central Europe based on the Google Earth Engine application. The approach quantifies landscape changes, identifies vulnerable areas and evaluates relations across human activities area, vegetation and risk index, aiming to inform better disaster response, risk reduction, and future planning for similar extreme events.
 
 ### Problem Statement 
+
 What were the spatial patterns and magnitude of flood impacts on human-activities area, vegetation and infrastructure during and after the July 2021 floods in Germany? How did these elements recover over time according to satellite observations and spatial analysis in the months following the disaster?
 
 ### End User 
@@ -54,31 +57,37 @@ WorldPop population distribution.
 ```js
 ee.ImageCollection('WorldPop/GP/100m/pop_age_sex_cons_unadj')  
 ```
-Besides, also used data from:
-
+Additional data sources:  
+- German official hydrological station data for flood extent mapping ([pegelonline.wsv.de](https://www.pegelonline.wsv.de/gast/karte/standard))  
+- Detailed precipitation dataset used for rainfall analysis ([NASA GPM IMERG](https://developers.google.com/earth-engine/datasets/catalog/NASA_GPM_L3_IMERG_V07?hl=zh-cn))  
 
 ### Methodology
-Our workflow combines physical, ecological and social risk factors. Flood extent is mapped via ( ). Vegetation change detection uses NDVI before and after flooding. Nightlight data indicates infrastructure disruptions. Population and rainfall data measure exposure and hazard levels. All indices are normalised and combined for final weighted risk analysis and mapping.
+Our workflow combines physical, ecological and social risk factors. Flood extent mapping utilises data provided by German hydrological monitoring stations. Vegetation change detection uses NDVI before and after flooding. Nightlight data indicates infrastructure disruptions. Population and rainfall data measure exposure and hazard levels. All indices are normalised and combined for final weighted risk analysis and mapping.
 
+### Interface  
 
-### Interface
-The interactive application offers multi-tools:
-(Add after all combined)
-timeline sliders, heat maps, draw-a-region calculations, and vegetation/infrastructure recovery visualisations. These features prioritise usability, providing stakeholders with insights tailored to planning and recovery scenarios.
-Split Panel in () and risk assessment to show the difference after comparison.
+The interactive application provides user-friendly tools designed to support flood risk analysis and stakeholder engagement:  
+
+- **Dynamic Visualisations:** Timeline sliders, heat maps, and split-panel views enable side-by-side comparison of flood risk factors and changes over time.  
+- **Recovery Monitoring:** Multi-temporal analysis of nightlight and vegetation data tracks impacts and recovery of infrastructure and ecosystems.  
+- **Risk Assessment Tools:** Integrated hazard and exposure indices support targeted and spatially explicit flood management decisions.  
+- **Interactive Drawing & Analysis:** Drawing tools facilitate local-scale calculations and enhance communication with stakeholders.
 
 ### The Application 
+
 :::{.column-page}
 
 <iframe src='https://peak-argon-449020-k0.projects.earthengine.app/view/flooding2021-0error-0warning-group' width='100%' height='700px'></iframe>
 
 :::
 
-### How it Works （500 words)
+### How it Works
+
 The application integrates multilayered analyses in a Google Earth Engine (GEE) interface across four key sections:
 
 #### Section 1：Starter Web and Flooding Basic Analysis
 Using official EMS data, this section delineates precise flood boundaries by subtracting river channel geometries from observed flood extents, establishing a baseline for impact and risk analysis.
+
 
 ```js
 var floodExtent = moselleData.observedEvent.geometry();
@@ -89,8 +98,9 @@ Map.addLayer(riverGeometry, {color: 'blue'}, 'Inherent River');
 Map.addLayer(floodExpansion, {color: 'cyan'}, 'Flood Expansion');
 ```
 
-#### Section 2：Vegetation Impact & Recovery (Edit this plzzz)
+#### Section 2：Vegetation Impact & Recovery
 Using MODIS NDVI data, comparing pre-flood and recovery periods. The difference map highlights damaged areas (red) and recovery (green), providing crucial insights into landscape resilience.
+
 
 ```js
 var ndviLoss = preFloodNDVI.subtract(postFloodNDVI);  
@@ -100,6 +110,8 @@ Map.addLayer(recoveryNDVI, {min: 0, max: 100, palette: ['red', 'yellow', 'green'
 
 #### Section 3：Night Light Detection
 Nightlight data highlight critical infrastructure and potential disruption areas.
+
+
 ```js 
 var night = ee.ImageCollection('NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG')  
   .filterBounds(studyArea)  
@@ -114,8 +126,10 @@ var nightN = night.divide(10).clamp(0, 1);
 #### Section 4：Risk Assessment
 This section integrates environmental and socioeconomic factors into a comprehensive flood vulnerability index, combining hazard likelihood with exposure metrics to produce spatial risk classifications.
 
+
 **DEM and Terrain**
 analysis uses NASADEM elevation data to calculate slope and Topographic Position Index (TPI), where flat areas and depressions are assigned higher risk due to water accumulation.
+
 
 ```js
 var dem = ee.Image('NASA/NASADEM_HGT/001').select('elevation').clip(studyArea);  
@@ -125,6 +139,7 @@ var tpi = dem.subtract(dem.focal_mean({radius:500,units:'meters'})).unmask(0);
 
 **Population** 
 exposure leverages WorldPop’s detailed demographic data, summing across all age and gender bands to identify vulnerable communities：
+
 
 ```js
 var popAllBands = ee.ImageCollection('WorldPop/GP/100m/pop_age_sex_cons_unadj')  
@@ -137,6 +152,8 @@ var pop = popAllBands.select([0]).unmask(0);
 
 **Precipitation**
 intensity from NASA’s GPM IMERG quantifies rainfall during the flood period：
+
+
 ```js
 var rain = ee.ImageCollection('NASA/GPM_L3/IMERG_V07')  
   .filterBounds(studyArea)  
@@ -150,6 +167,7 @@ var rain = ee.ImageCollection('NASA/GPM_L3/IMERG_V07')
 **Parameter Normalisation:**
 All variables are normalised to a 0-1 scale to enable integration and weighted combination:
 
+
 ```js
 var tpiDep = ee.Image(1).subtract(tpi.add(100).divide(200).clamp(0, 1));  
 var flowN = flow.divide(20000).clamp(0, 1);  
@@ -159,8 +177,9 @@ var popN = pop.divide(34).clamp(0, 1);
 var nightN = night.divide(10).clamp(0, 1);  
 ```
 
-**Risk Index:**
-Finally, composite indices for hazard and exposure are computed and combined into a unified risk index. Weightings reflect expert judgement and hydrological modelling (e.g., Triana et al., 2010), balancing influences of terrain, rainfall, flooding extent, population, and infrastructure vulnerability.
+**Risk Index:**  
+Finally, composite indices for hazard and exposure are computed and combined into a unified risk index. Weightings reflect expert judgement and hydrological modelling (e.g., [Triana et al., 2010](#triana-2010)), balancing influences of terrain, rainfall, flooding extent, population, and infrastructure vulnerability.  
+
 
 ```js
 var slopeFlat = ee.Image(1).subtract(slope.divide(30).clamp(0, 1));  
@@ -183,45 +202,37 @@ var risk = hazard.multiply(0.5)
   .add(exposure.multiply(0.5));  
 ```
 
-**Innovative Platform Highlights**  
+#### Limitations:  
 
-- Interactive Split-View Maps enable side-by-side comparison of flood risk factors.  
-- Multi-Temporal Nightlight & Vegetation Recovery Analysis track infrastructure and ecosystem impacts across flood phases.  
-- Robust Risk Assessment with spatially explicit hazard and exposure indices supports targeted flood management.  
-- User-Friendly Drawing & Visualization Tools facilitate stakeholder engagement.  
+During the processing, we found the following limitations:  
 
-#### Limitations:
+- The Google Earth Engine is not suitable for complex analysis so we had to simplify our analytical procedures to improve visualisation performance.  
 
-During the processing, we found the following limitations:
+- Daily flood extent visualisation showed minimal significant changes, likely due to the canyon terrain of the Moselle River which constrains lateral flood expansion. As noted by [Giustarini et al., 2013](#giustarini-2013), SAR systems are side-looking and terrain features can produce radar shadow in steep areas.  
 
--  The Google Earth Engine is not suitable for complex analysis so we had to simplify our analytical procedures to improve visualisation performance.
+- Precipitation data could not be obtained at a finer spatial resolution, limiting analysis of localised rainfall patterns. Population data resolution also constrained our ability to conduct detailed vulnerability assessments.  
 
--  Daily flood extent visualisation showed minimal significant changes, likely due to the canyon terrain of the Moselle River which constrains lateral flood expansion. As noted by Giustarini et al. (2013), SAR systems are side-looking and terrain features can produce radar shadow in steep areas.
+- Time range and threshold settings presented challenges. Setting appropriate NDVI and nightlight recovery thresholds required subjective decisions, and our analysis timeframe (July 2021–March 2022) may not capture complete recovery trajectories.  
 
-- Precipitation data could not be obtained at a finer spatial resolution, limiting analysis of localised rainfall patterns. Population data resolution also constrained our ability to conduct detailed vulnerability assessments.
+- Multiple factors beyond flooding might influence the recovery processes observed in nightlight and vegetation data. Natural seasonal changes, human interventions, and economic factors affect these indicators, potentially introducing confounding variables into our risk assessment.  
 
--  Time range and threshold settings presented challenges. Setting appropriate NDVI and nightlight recovery thresholds required subjective decisions, and our analysis timeframe (July 2021-March 2022) may not capture complete recovery trajectories.
+### Reference:  
 
--  Multiple factors beyond flooding might influence the recovery processes observed in nightlight and vegetation data. Natural seasonal changes, human interventions, and economic factors affect these indicators, potentially introducing confounding variables into our risk assessment.
+Amatebelle, C.E., Owolabi, S.T., Abiodun, O. and Okolie, C.C. (2025). A systematic analysis of remote sensing and geographic information system applications for flood disaster risk management. *Journal of Spatial Science*, pp.1–27. doi: [https://doi.org/10.1080/14498596.2025.2476973](https://doi.org/10.1080/14498596.2025.2476973) [Accessed 18 Apr. 2025].  
 
-#### Reference:
+Bi, H., Ni, Z., Tian, J., Jiang, C., Sun, H. and Lin, Q. (2022). Influence of lignin on coal gangue pyrolysis and gas emission based on multi-lump parallel reaction model and principal component analysis. *The Science of The Total Environment*, 820, pp.153083–153083. doi: [https://doi.org/10.1016/j.scitotenv.2022.153083](https://doi.org/10.1016/j.scitotenv.2022.153083) [Accessed 19 Apr. 2025].  
 
+Earthengine.app. (2025a). MODIS NDVI Slider. [online] Available at: [https://khaledalshamaa.users.earthengine.app/view/modis-ndvi-slider](https://khaledalshamaa.users.earthengine.app/view/modis-ndvi-slider) [Accessed 19 Apr. 2025].  
 
-Amatebelle, C.E., Owolabi, S.T., Abiodun, O. and Okolie, C.C. (2025). A systematic analysis of remote sensing and geographic information system applications for flood disaster risk management. Journal of Spatial Science, pp.1–27. doi:https://doi.org/10.1080/14498596.2025.2476973 [Accessed 18 Apr. 2025].
+Earthengine.app. (2025b). tropomi-explorer. [online] Available at: [https://jstnbraaten.users.earthengine.app/view/tropomi-explorer#dataset=Nitrogen%20dioxide](https://jstnbraaten.users.earthengine.app/view/tropomi-explorer#dataset=Nitrogen%20dioxide) [Accessed 20 Apr. 2025].  
 
-Bi, H., Ni, Z., Tian, J., Jiang, C., Sun, H. and Lin, Q. (2022). Influence of lignin on coal gangue pyrolysis and gas emission based on multi-lump parallel reaction model and principal component analysis. The Science of The Total Environment, 820, pp.153083–153083. doi:https://doi.org/10.1016/j.scitotenv.2022.153083 [Accessed 19 Apr. 2025]..
+Eddy, M., Ewing, J., Specia, M. and Erlanger, S. (2021). European Floods Are Latest Sign of a Global Warming Crisis. *The New York Times*. [online] 16 Jul. Available at: [https://www.nytimes.com/2021/07/16/world/europe/germany-floods-climate-change.html](https://www.nytimes.com/2021/07/16/world/europe/germany-floods-climate-change.html) [Accessed 20 Apr. 2025].  
 
-Earthengine.app. (2025a). MODIS NDVI Slider. [online] Available at: https://khaledalshamaa.users.earthengine.app/view/modis-ndvi-slider [Accessed 19 Apr. 2025].
+<a id="giustarini-2013"></a>Giustarini, L., Hostache, R., Matgen, P., Schumann, G.J.-P., Bates, P.D. and Mason, D.C. (2013). A Change Detection Approach to Flood Mapping in Urban Areas Using TerraSAR-X. *IEEE Transactions on Geoscience and Remote Sensing*, 51(4), pp.2417–2430. doi: [https://doi.org/10.1109/TGRS.2012.2210901](https://doi.org/10.1109/TGRS.2012.2210901) [Accessed 20 Apr. 2025].  
 
-Earthengine.app. (2025b). tropomi-explorer. [online] Available at: https://jstnbraaten.users.earthengine.app/view/tropomi-explorer#dataset=Nitrogen%20dioxide [Accessed 20 Apr. 2025].
+Google for Developers. (2025). GPM: Global Precipitation Measurement (GPM) Release 07 | Earth Engine Data Catalog | Google for Developers. [online] Available at: [https://developers.google.com/earth-engine/datasets/catalog/NASA_GPM_L3_IMERG_V07?hl=zh-cn](https://developers.google.com/earth-engine/datasets/catalog/NASA_GPM_L3_IMERG_V07?hl=zh-cn) [Accessed 21 Apr. 2025].  
 
-Eddy, M., Ewing, J., Specia, M. and Erlanger, S. (2021). European Floods Are Latest Sign of a Global Warming Crisis. The New York Times. [online] 16 Jul. Available at: https://www.nytimes.com/2021/07/16/world/europe/germany-floods-climate-change.html [Accessed 20 Apr. 2025].
+Manandhar, B., Cui, S., Wang, L. and Shrestha, S. (2023). Post-Flood Resilience Assessment of July 2021 Flood in Western Germany.  
 
-Giustarini, L., Hostache, R., Matgen, P., Schumann, G.J.-P. ., Bates, P.D. and Mason, D.C. (2013). A Change Detection Approach to Flood Mapping in Urban Areas Using TerraSAR-X. IEEE Transactions on Geoscience and Remote Sensing, [online] 51(4), pp.2417–2430. doi:https://doi.org/10.1109/TGRS.2012.2210901 [Accessed 20 Apr. 2025].
-
-Google for Developers. (2025). GPM: Global Precipitation Measurement (GPM) Release 07 | Earth Engine Data Catalog | Google for Developers. [online] Available at: https://developers.google.com/earth-engine/datasets/catalog/NASA_GPM_L3_IMERG_V07?hl=zh-cn [Accessed 21 Apr. 2025].
-
-Manandhar, B., Cui, S., Wang, L. and Shrestha, S. (2023). Post-Flood Resilience Assessment of July 2021 Flood in Western Germany 
-
-Triana, M.A., Labadie, J.W., Kumar, S. and Nieto, J. (2010) ‘Artificial neural networks applied to efficient modeling of stream-aquifer responses in an intensively irrigated river basin under a variety of water management alternatives’, Journal of Hydrology, 391(3–4), pp. 366–378. Available at: https://www.sciencedirect.com/science/article/pii/S002216941000449X [Accessed: 27 April 2025].
+<a id="triana-2010"></a>Triana, M.A., Labadie, J.W., Kumar, S. and Nieto, J. (2010) ‘Artificial neural networks applied to efficient modeling of stream-aquifer responses in an intensively irrigated river basin under a variety of water management alternatives’, *Journal of Hydrology*, 391(3–4), pp. 366–378. Available at: [https://www.sciencedirect.com/science/article/pii/S002216941000449X](https://www.sciencedirect.com/science/article/pii/S002216941000449X) [Accessed: 27 April 2025].  
 
