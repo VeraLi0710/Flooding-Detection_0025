@@ -1,5 +1,6 @@
 ---
-title: Analysis of Significant Flooding Disaster in Europe
+title: |
+  Central European Flood 2021: Interactive Analysis of Moselle River Basin Impacts
 jupyter:
   jupytext:
     text_representation:
