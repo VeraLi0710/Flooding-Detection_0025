@@ -14,10 +14,6 @@ jupyter:
     name: base
 ---
 
-Project Github Link: [https://github.com/alteregoyishan/groupwork_0025.git](https://github.com/alteregoyishan/groupwork_0025.git)
-
-GEE Complete Code: [https://code.earthengine.google.com/?scriptPath=users%2Fverali0710%2Fhello_world%3A0025Final_V2](https://code.earthengine.google.com/?scriptPath=users%2Fverali0710%2Fhello_world%3A0025Final_V2)  
-
 ### Project Summary 
 
 The project focused on the significant flooding happened July 2021 in Central Europe based on the Google Earth Engine application. The approach quantifies landscape changes, identifies vulnerable areas and evaluates relations across human activities area, vegetation and risk index, aiming to inform better disaster response, risk reduction, and future planning for similar extreme events.
